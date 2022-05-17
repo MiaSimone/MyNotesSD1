@@ -1,42 +1,18 @@
 
-# Import libraries
-import numpy as np
-
-# from sklearn.externals 
 import joblib
 import pickle
 from flask import Flask, request, jsonify, render_template
 
-# create an instance (our app)
-#app = Flask(__name__)
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='hmtl_documents')
 
-msmodel = joblib.load('msmodel_meanshift.pkl')
 
 @app.route('/', methods=['GET', 'POST'])
 
-@app.route('/hi/<name>')
-def hello(name = None):
-    return render_template('start.html', name=name)
-# name is parameter in the template: {{name}}
-
-@app.route('/predict')
+@app.route('/redis', methods=['GET', 'POST'])
 def predict():
-    return render_template('prediction.html')
-
-@app.route('/predicted', methods=['GET', 'POST'])
-def predicted():
-    if request.method == 'POST':
-        x1 = request.form['x1']
-        x2 = request.form['x2']
-        X = [[x1, x2]]
-        predicted = msmodel.predict(X)
-          
-        return render_template("predicted.html", content=X, prediction=predicted)
-    
-@app.route('/bye')
-def bye():
-    return render_template('bye.html')
+    if request.method == 'GET':
+        data = request.data
+    return render_template('redis.html', url1=data)
 
 if __name__ == '__main__':
     app.run(debug=True)
